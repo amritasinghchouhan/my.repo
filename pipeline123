@@ -8,7 +8,7 @@ pipeline {
               git 'https://github.com/Pritam-Khergade/student-ui.git'
             }
         }
-        stage('checkout') {
+        stage('install') {
             steps {
             sh'''
             sudo yum update all
