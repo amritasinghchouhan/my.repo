@@ -16,15 +16,6 @@ pipeline {
             '''
             }
         }
-
-         stage('ec2') {
-            steps {
-                   sh '''
-                    aws ec2 run-instances --image-id ami-0cc9838aa7ab1dce7 --count 1 --instance-type t2.micro --security-group-ids sg-0a1eb059f599514a9 --subnet-id subnet-0a358c82d4a0a627b
-
-            '''
-            }
-        }:
      stage('S3-UPLOAD    ') {
             steps {
             sh'''
