@@ -11,7 +11,6 @@ pipeline {
         stage('install') {
             steps {
             sh'''
-            sudo yum update all
             sudo yum install maven -y
             sudo mvn clean install
             '''
