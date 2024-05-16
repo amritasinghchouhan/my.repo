@@ -20,7 +20,7 @@ pipeline {
             steps {
             sh'''
           #sudo cd /var/lib/jenkins/workspace/demo/target/
-           sudo mv s3 cp studentapp-2.2-SNAPSHOT.war studentapp-2.2-SNAPSHOT-${BUILD_TIMESTAMP}.war  
+           sudo mv s3  studentapp-2.2-SNAPSHOT.war studentapp-2.2-SNAPSHOT-${BUILD_TIMESTAMP}.war  
           sudo aws s3 cp studentapp-2.2-SNAPSHOT-${BUILD_TIMESTAMP}.war s3://aws223
             '''
             }
