@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('checkout') {
+            steps {
+            
+              git 'https://github.com/Pritam-Khergade/student-ui.git'
+            }
+        }
+        stage('checkout') {
+            steps {
+            sh'''
+            sudo yum update all
+            sudo yum install maven -y
+            sudo mvn clean install
+            '''
+            }
+        }
+    }
+}
