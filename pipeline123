@@ -19,7 +19,7 @@ pipeline {
      stage('S3-UPLOAD    ') {
             steps {
             sh'''
-           sudo mv /var/lib/jenkins/workspace/demo/target/studentapp-2.2-SNAPSHOT.war /var/lib/jenkins/workspace/demo/target/studentapp-2.2-SNAPSHOT-${BUILD_TIMESTAMP}-.war  
+           sudo mv /var/lib/jenkins/workspace/demo/target/studentapp-2.2-SNAPSHOT.war /var/lib/jenkins/workspace/demo/target/${BUILD_ID}  
           #sudo aws s3 cp studentapp-2.2-SNAPSHOT-${BUILD_TIMESTAMP}.war s3://aws223
             '''
             }
