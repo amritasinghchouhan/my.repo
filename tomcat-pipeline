@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('checkout') {
+            steps {
+            
+              git 'https://github.com/Pritam-Khergade/student-ui.git'
+            }
+        }
+        stage('install') {
+            steps {
+            sh'''
+            sudo yum install maven -y
+            sudo mvn clean install
+            '''
+            }
+        }
+     stage('S3-UPLOAD    ') {
+            steps {
+            sh'''
+           sudo mv /var/lib/jenkins/workspace/demo/target/studentapp-2.2-SNAPSHOT.war  studentapp-2.2-SNAPSHOT-${BUILD_TIMESTAMP}.war 
+            sudo aws s3 cp studentapp-2.2-SNAPSHOT-${BUILD_TIMESTAMP}.war s3://aws223
+            '''
+            }
+        }
+    }
+}
