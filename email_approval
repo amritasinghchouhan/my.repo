@@ -8,7 +8,7 @@ pipeline {
                     emailext(
                         subject: "Deployment Approval Required",
                         body: "Please review the changes and approve the deployment: ${env.BUILD_URL}input",
-                        to: "approver@example.com"
+                        to: "amritasinghchouhan1231@gmail.com"
                     )
                     
                     // Wait for approval
