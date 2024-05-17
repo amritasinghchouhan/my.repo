@@ -1,0 +1,30 @@
+pipeline {
+    agent any
+    stages {
+        stage('Approval') {
+            steps {
+                script {
+                    // Send an email to the approver with a link to approve the deployment
+                    emailext(
+                        subject: "Deployment Approval Required",
+                        body: "Please review the changes and approve the deployment: ${env.BUILD_URL}input",
+                        to: "approver@example.com"
+                    )
+                    
+                    // Wait for approval
+                    input(id: 'Approval', message: "Approve deployment?", ok: "Yes")
+                }
+            }
+        }
+        stage('Deploy') {
+            when {
+                // Check if the approval was given
+                expression { return currentBuild.rawBuild.getAction(hudson.model.ParametersAction.class).getParameter('Approval').value == 'Yes' }
+            }
+            steps {
+                // Deployment steps go here
+                echo "Deploying the application..."
+            }
+        }
+    }
+}
