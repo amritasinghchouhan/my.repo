@@ -42,7 +42,6 @@
   
   post {
          success {
-                   #mail bcc: '', body: 'The Docker image repo123:${BUILD_ID} has been successfully pushed.', cc: '', from: '', replyTo: '', subject: 'Docker Push Completed: repo123:${BUILD_ID}', to: 'amritasinghchouhan1231@gmail.com'
             emailext (
                 subject: "Docker Push Completed: repo123:${BUILD_ID}",
                 body: "The Docker image repo123:${BUILD_ID} has been successfully pushed.",
