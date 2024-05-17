@@ -37,17 +37,15 @@
             }
 
         }
-}
-
-  
+}  
   post {
-         success {
+        success {
+            // This will run only if the Docker push stage completes successfully
             emailext (
                 subject: "Docker Push Completed: repo123:${BUILD_ID}",
                 body: "The Docker image repo123:${BUILD_ID} has been successfully pushed.",
                 to: "$RECIPIENT_EMAIL"
- 
-}
+            )
+        }
   }
-}
-}
+  }
