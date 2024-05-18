@@ -51,7 +51,6 @@ pipeline {
             // Add your deployment script or command here
         }
            }
-    }
 
   post {
         success {
