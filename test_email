@@ -44,8 +44,10 @@ pipeline {
 
            stage('Deploy') {
         // Check if the approval was given and if the branch is 'master'
-        if ('Approval').value == 'Yes') {
-            echo "building image to production..."
+                    when {
+                // Check if the approval was given
+                expression { return currentBuild.rawBuild.getAction(hudson.model.ParametersAction.class).getParameter('Approval').value == 'Yes' }
+            }
             // Add your deployment script or command here
         }
            }
