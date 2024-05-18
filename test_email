@@ -1,0 +1,64 @@
+pipeline {
+    agent any
+    environment {
+    RECIPIENT_EMAIL = 'amritasinghchouhan1231@gmail.com'
+    }
+    stages {
+        stage('git-pull-for-docker-image') {
+            steps {
+            git branch: 'main', url: 'https://github.com/amritasinghchouhan/my.repo.git'
+            }
+        }
+        stage('docker-install') {
+            steps {
+                   sh '''
+           sudo yum install docker -y
+           sudo systemctl start docker
+           sudo systemctl enable docker
+            '''
+            }
+        }
+        stage ('building-image'){
+            steps{
+              sh '''
+             sudo docker build -t repo123 .
+             '''
+            }
+        }
+
+        stage('Approval') {
+            steps {
+                script {
+                    // Send an email to the approver with a link to approve the deployment
+                    emailext(
+                        subject: "Deployment Approval Required",
+                        body: "Please review the changes and approve the deployment: ${env.BUILD_URL}input",
+                        to: "amritasinghchouhan1231@gmail.com"
+                    )
+                    
+                    // Wait for approval
+                    input(id: 'Approval', message: "Approve deployment?", ok: "Yes")
+                }
+            }
+        }
+
+           stage('Deploy') {
+        // Check if the approval was given and if the branch is 'master'
+        if (getParameter('Approval').value == 'Yes') {
+            echo "building image to production..."
+            // Add your deployment script or command here
+        }
+           }
+    }
+
+  post {
+        success {
+            // This will run only if the Docker push stage completes successfully
+            emailext (
+                subject: "Docker Push Completed: repo123:${BUILD_ID}",
+                body: "The Docker image repo123:${BUILD_ID} has been successfully pushed.",
+                to: "$RECIPIENT_EMAIL"
+            )
+        }
+  }
+  }
