@@ -44,7 +44,7 @@ pipeline {
 
            stage('Deploy') {
         // Check if the approval was given and if the branch is 'master'
-        if (getParameter('Approval').value == 'Yes') {
+        if ('Approval').value == 'Yes') {
             echo "building image to production..."
             // Add your deployment script or command here
         }
