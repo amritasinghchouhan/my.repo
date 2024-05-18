@@ -46,8 +46,9 @@ pipeline {
         // Check if the approval was given and if the branch is 'master'
                     when {
                 // Check if the approval was given
-                expression { return currentBuild.rawBuild.getAction(hudson.model.ParametersAction.class).getParameter('Approval').value == 'Yes' }
-            }
+                #expression { return currentBuild.rawBuild.getAction(hudson.model.ParametersAction.class).getParameter('Approval').value == 'Yes' }
+                 expression  { return 'Approval' == 'Yes' }    
+}
             // Add your deployment script or command here
         }
            }
