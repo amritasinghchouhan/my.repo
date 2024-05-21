@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+stages {
+        stage('checkout') {
+            steps {
+            
+              git 'https://github.com/Pritam-Khergade/student-ui.git'
+            }
+        }
+        stage('build') {
+            steps {
+            sh'''
+            sudo mvn clean install
+            '''
+            }
+        }
+         stage('deploy') {
+            steps {
+/*deploy plugin for this container to deploy
+and generate this pipeline through pipeline syntax*/
+        deploy adapters: [tomcat9(credentialsId: 'ss', path: '', url: 'http://172.31.14.68:8080')], contextPath: '/', war: '**/*.war'
+            }
+        }
+    }
+}
