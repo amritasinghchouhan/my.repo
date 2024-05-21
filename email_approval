@@ -35,7 +35,7 @@ pipeline {
                         Click on the following link to approve:
                         ${BUILD_URL}input
                         """,
-                        to: 'nikhilnirmale123@gmail.com',
+                        to: 'amritasinghchouhan1231@gmail.com',
                         replyTo: 'jenkins@example.com'
                     )
                 }
