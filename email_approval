@@ -1,30 +1,78 @@
+
 pipeline {
     agent any
+
     stages {
-        stage('Approval') {
+        stage('Fetch Code from Repo') {
+            steps {
+                git branch: 'main', url: 'https://github.com/SanjayTomar22/pikachu.git'
+            }
+        }
+        stage('Install Docker on Jenkins Host') {
+            steps {
+                sh '''
+                sudo yum install docker -y
+                sudo systemctl start docker
+                sudo systemctl enable docker
+                '''
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                sudo docker build -t ni-repo .
+                '''
+            }
+        }
+        stage('Email Approval') {
             steps {
                 script {
-                    // Send an email to the approver with a link to approve the deployment
                     emailext(
-                        subject: "Deployment Approval Required",
-                        body: "Please review the changes and approve the deployment: ${env.BUILD_URL}input",
-                        to: "amritasinghchouhan1231@gmail.com"
+                        subject: "Approval Required: Push Docker Image to AWS ECR",
+                        body: """
+                        Please approve the Docker image push to AWS ECR by replying to this email with 'APPROVE'.
+                        
+                        Click on the following link to approve:
+                        ${BUILD_URL}input
+                        """,
+                        to: 'nikhilnirmale123@gmail.com',
+                        replyTo: 'jenkins@example.com'
                     )
-                    
-                    // Wait for approval
-                    input(id: 'Approval', message: "Approve deployment?", ok: "Yes")
                 }
             }
         }
-        stage('Deploy') {
-            when {
-                // Check if the approval was given
-                expression { return currentBuild.rawBuild.getAction(hudson.model.ParametersAction.class).getParameter('Approval').value == 'Yes' }
-            }
+        stage('Wait for Approval') {
             steps {
-                // Deployment steps go here
-                echo "Deploying the application..."
+                script {
+                    input message: 'Approve Docker image push to AWS ECR?', ok: 'APPROVE'
+                }
             }
+        }
+        stage('Push Docker Image to AWS ECR') {
+            steps {
+                sh '''
+                sudo aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin 058264278276.dkr.ecr.us-west-2.amazonaws.com
+                sudo docker tag ni-repo:latest 058264278276.dkr.ecr.us-west-2.amazonaws.com/ni-repo:${BUILD_ID}-${BUILD_TIMESTAMP}
+                sudo docker push 058264278276.dkr.ecr.us-west-2.amazonaws.com/ni-repo:${BUILD_ID}-${BUILD_TIMESTAMP}
+                '''
+            }
+        }
+    }
+    
+    post {
+        success {
+            emailext(
+                subject: "Docker Image Pushed Successfully",
+                body: "The Docker image has been successfully pushed to AWS ECR.",
+                to: 'amritasinghchouhan1231@gmail.com'
+            )
+        }
+        failure {
+            emailext(
+                subject: "Docker Image Push Failed",
+                body: "The Docker image push to AWS ECR has failed. Please check the Jenkins logs for details.",
+                to: 'amritasinghchouhan1231@gmail.com'
+            )
         }
     }
 }
