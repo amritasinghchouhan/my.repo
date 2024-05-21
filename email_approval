@@ -20,7 +20,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                sudo docker build -t ni-repo .
+                sudo docker build -t repo123 .
                 '''
             }
         }
@@ -51,9 +51,9 @@ pipeline {
         stage('Push Docker Image to AWS ECR') {
             steps {
                 sh '''
-                sudo aws ecr get-login-password --region us-west-2 | sudo docker login --username AWS --password-stdin 058264278276.dkr.ecr.us-west-2.amazonaws.com
-                sudo docker tag ni-repo:latest 058264278276.dkr.ecr.us-west-2.amazonaws.com/ni-repo:${BUILD_ID}-${BUILD_TIMESTAMP}
-                sudo docker push 058264278276.dkr.ecr.us-west-2.amazonaws.com/ni-repo:${BUILD_ID}-${BUILD_TIMESTAMP}
+               sudo aws ecr get-login-password --region ap-south-1 | sudo docker login --username AWS --password-stdin 471112517670.dkr.ecr.ap-south-1.amazonaws.com
+              sudo docker tag repo123:latest 471112517670.dkr.ecr.ap-south-1.amazonaws.com/repo123:${BUILD_ID}
+               docker push 471112517670.dkr.ecr.ap-south-1.amazonaws.com/repo123:${BUILD_ID}
                 '''
             }
         }
