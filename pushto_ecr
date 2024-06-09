@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+    stages {
+        stage('fetch') {
+            steps {
+              git 'https://github.com/Pritam-Khergade/student-ui.git'
+            }
+        }
+                stage('build') {
+            steps {
+               sh'''
+                sudo docker build -t newrepo1231 .
+               '''
+            }
+        }
+             stage('push') {
+            steps {
+               sh'''
+              sudo aws ecr get-login-password --region ap-south-1 |sudo docker login --username AWS --password-stdin 471112517670.dkr.ecr.ap-south-1.amazonaws.com
+              sudo docker tag newrepo1231:latest 471112517670.dkr.ecr.ap-south-1.amazonaws.com/newrepo1231:${BUILD_ID}-${BUILD_TIMESTAMP}
+              sudo docker push 471112517670.dkr.ecr.ap-south-1.amazonaws.com/newrepo1231:${BUILD_ID}-${BUILD_TIMESTAMP}
+               '''
+            }
+        }
+    }
+}
