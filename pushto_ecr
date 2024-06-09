@@ -6,7 +6,7 @@ pipeline {
               git 'https://github.com/Pritam-Khergade/student-ui.git'
             }
         }
-                stage('building img') {
+                stage('build img') {
             steps {
                sh'''
                 sudo docker build -t newrepo1231 .
