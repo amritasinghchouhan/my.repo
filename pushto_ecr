@@ -13,7 +13,7 @@ pipeline {
                '''
             }
         }
-             stage('push') {
+             stage('pushing') {
             steps {
                sh'''
               sudo aws ecr get-login-password --region ap-south-1 |sudo docker login --username AWS --password-stdin 471112517670.dkr.ecr.ap-south-1.amazonaws.com
