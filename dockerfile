@@ -1,6 +1,14 @@
-FROM node:18-alpine
+FROM python:3.6.4-alpine3.6
+
+ENV FLASK_APP=minitwit
+COPY . /app
 WORKDIR /app
-COPY . .
-RUN yarn install --production
-CMD ["node", "src/index.js"]
-EXPOSE 3000
+
+RUN pip install --editable .
+RUN flask initdb
+
+# Unit tests
+RUN python setup.py test
+
+EXPOSE 5000
+CMD [ "flask", "run", "--host=0.0.0.0" ]
